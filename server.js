@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // Connecting to "api", i.e our routes
 app.use('/', api)
 
+
 // Running the server
 const port = 3001
 app.listen(port, function () { console.log('Running on ' + port) })

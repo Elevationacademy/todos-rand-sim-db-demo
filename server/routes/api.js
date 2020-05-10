@@ -1,33 +1,31 @@
 const express = require('express')
 const router = express.Router()
-
-const todos = []
-let id = 1
+const Todo = require('../models/Todo')
 
 router.get('/todos', function (req, res) {
-    res.send(todos)
+    //get the data requested from the db
+    Todo.find({})
+        .then(function (todos) {
+            res.send(todos)
+        })
 })
 
 router.post('/todo', function (req, res) {
-    const text = req.body.text
-    const newTodo = { id: id++, text: text, complete: false }
-
-    todos.push(newTodo)
-    res.send(todos)
+    const todo = new Todo({ text: req.body.text, completed: false })
+    todo.save()
+        .then(function (todo) {
+            res.send(todo)
+        })
 })
 
-router.put('/todo/:todoID', function (req, res) {
-    const todoID = req.params.todoID
 
-    todos.find(t => t.id == todoID).completed = true
-    res.send(todos)
-})
 
 router.delete('/todo/:todoID', function (req, res) {
     const todoID = req.params.todoID
-    todos.splice(todoID, 1)
-
-    res.send(todos)
+    Todo.findOneAndDelete({ _id: todoID })
+        .then(function (todo) {
+            res.send(todo)
+        })
 })
 
 module.exports = router
